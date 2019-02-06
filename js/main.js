@@ -104,32 +104,42 @@
 	* ------------------------------------------------------ */
 	var ssOwlCarousel = function() {
 
-		$(".owl-carousel").owlCarousel({		
-	      nav: false,
+		$(".owl-carousel").owlCarousel({
+		  items:1,
+		  dots: 1,
+		  iv_load_policy:3,
+		  modestbranding:1,
+		  rel:0,
+		  autoplay:true,
+		  autoplayTimeout:2000,
+		  showinfo:0,	
+		  video: true,
 			loop: true,
-	    	margin: 50,
+			margin: 50,
+			autoWidth:true,
 	    	responsiveClass:true,
 	    	responsive: {
 	         0:{
-	            items:2,
+	            items:1,
 	            margin: 20
 	         },
 	         400:{
-	            items:3,
+	            items:1,
 	            margin: 30
 	         },
 	         600:{
-	            items:4,
+	            items:2,
 	            margin: 40
 	         },
 	         1000:{
-	            items:6            
+				items:2,
+				margin: 50           
 	         }
 	    	}
 		});
 
 	};
-  	
+	  
 
 
   	/* Menu on Scrolldown
@@ -190,8 +200,8 @@
 	var ssSmoothScroll = function() {
 
 		$('.smoothscroll').on('click', function (e) {
-			var target = this.hash,
-			$target    = $(target);
+
+	/* 		$target    = $(target);
 	 	
 		 	e.preventDefault();
 		 	e.stopPropagation();	   	
@@ -205,8 +215,8 @@
 					$('#header-menu-trigger').trigger('click');
 				}
 
-	      	window.location.hash = target;
-	      });
+	      	window.location.hash = target; 
+	      });*/
 	  	});
 
 	};
@@ -424,3 +434,98 @@
  
 
 })(jQuery);
+
+
+// Wrap every letter in a span
+$('.ml11 .letters').each(function(){
+	$(this).html($(this).text().replace(/([^\x00-\x80]|\w)/g, "<span class='letter'>$&</span>"));
+  });
+  
+  var animation = anime.timeline({loop: 1, autoplay: false})
+  .add({
+    targets: '.ml11 .line',
+    scaleY: [0,1],
+    opacity: [0.5,1],
+    easing: "easeOutExpo",
+    duration: 700
+  })
+  .add({
+    targets: '.ml11 .line',
+    translateX: [0,$(".ml11 .letters").width()],
+    easing: "easeOutExpo",
+    duration: 700,
+    delay: 100
+  }).add({
+    targets: '.ml11 .letter',
+    opacity: [0,1],
+    easing: "easeOutExpo",
+    duration: 600,
+    offset: '-=775',
+    delay: function(el, i) {
+      return 34 * (i+1)
+    }
+  }).add({
+    targets: '.ml11',
+    opacity: 1,
+    duration: 1000,
+    easing: "easeOutExpo",
+    delay: 10000
+  });
+
+
+
+	$.fn.isOnScreen = function(){
+
+		var win = $(window);
+	
+		var viewport = {
+			top : win.scrollTop(),
+			left : win.scrollLeft()
+		};
+		viewport.right = viewport.left + win.width();
+		viewport.bottom = viewport.top + win.height();
+	
+		var bounds = this.offset();
+		bounds.right = bounds.left + this.outerWidth();
+		bounds.bottom = bounds.top + this.outerHeight();
+	
+		return (!(viewport.right < bounds.left || viewport.left > bounds.right || viewport.bottom < bounds.top || viewport.top > bounds.bottom));
+	
+	};
+	var i = 0;
+	$(window).on('scroll', function() {
+	$('.letter').each(function() {
+		if ($(this).isOnScreen()) {
+			console.log('in viewport')
+			if (i == 0 ){
+				animation.restart();
+				i = 1;
+			}
+		} else {
+			i = 0
+			console.log('out of viewport')
+		}
+	});
+	});
+
+
+	$('.owl-carousel2').owlCarousel({
+		items: 3,
+		margin: 0,
+		nav: true,
+		navText:["<div class='nav-btn prev-slide'></div>","<div class='nav-btn next-slide'></div>"],
+		responsive: {
+			0: {
+				items: 3
+			},
+			600: {
+				items: 3
+			},
+			1000: {
+				items: 3
+			}
+		}
+	});
+	
+
+
